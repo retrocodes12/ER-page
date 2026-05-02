@@ -1,6 +1,8 @@
 const CacheManager = require('./CacheManager');
 const DataSource = require('./dataSources');
 
+const config = require('../config');
+
 class ElectionService {
   constructor() {
     // Ensure cache manager is initialized
@@ -12,6 +14,18 @@ class ElectionService {
   }
 
   async getElectionResults() {
+    // Check if counting has started
+    const now = new Date();
+    if (now < config.countingStartTime) {
+      // Return NOT_STARTED response without seat numbers
+      return {
+        state: 'Kerala',
+        status: 'NOT_STARTED',
+        message: 'Counting has not started yet',
+        lastUpdated: now.toISOString()
+      };
+    }
+
     let cachedData = null;
     try {
       cachedData = await this.cache.get('election-results');

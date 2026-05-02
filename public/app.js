@@ -26,6 +26,24 @@ async function fetchData() {
 }
 
 function updateUI(data) {
+  // If counting hasn't started, show a simple message
+  if (data.status === 'NOT_STARTED') {
+    document.getElementById('total-seats').textContent = '0';
+    document.getElementById('last-updated').textContent = new Date(data.lastUpdated).toLocaleString();
+    // Show a centered message
+    const container = document.querySelector('.container');
+    container.innerHTML = `<section class="hero">
+        <h1>Kerala Election Results</h1>
+        <div class="seat-tally">
+          <span class="number" id="total-seats">0</span>
+          <span class="label">Seats</span>
+        </div>
+        <div class="last-updated" id="last-updated">Last updated: ${new Date(data.lastUpdated).toLocaleString()}</div>
+        <p style="text-align:center; font-size:1.2rem; margin-top:1rem; color:#e67e22;">${data.message}</p>
+      </section>`;
+    return;
+  }
+
   // Hero section – total seats and last updated
   document.getElementById('total-seats').textContent = data.totalSeats;
   document.getElementById('last-updated').textContent = new Date(data.lastUpdated).toLocaleString();
