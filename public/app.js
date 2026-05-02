@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:3000/api/results';
+const API_URL = '/api/results';
 
 // Helper to determine leading party based on seat counts
 function getLeadingParty(leading) {
@@ -33,7 +33,7 @@ function updateUI(data) {
   // Leading party highlight
   const { party, seats } = getLeadingParty(data.leading);
   const leadingSection = document.getElementById('leading-party-section');
-  document.getElementById('leading-party-name').textContent = party;
+  document.getElementById('leading-party-name').textContent = party === '' ? 'N/A' : party;
   document.getElementById('leading-party-seats').textContent = `${seats} seats`;
 
   // Apply color border based on leading party
@@ -63,6 +63,16 @@ function updateUI(data) {
   // Constituencies list with close contest badge
   const list = document.getElementById('constituencies-list');
   list.innerHTML = '';
+
+  // If no constituencies yet (counting hasn't started), show countdown message
+  if (!data.constituencies || data.constituencies.length === 0) {
+    const countdown = document.createElement('div');
+    countdown.className = 'countdown-message';
+    countdown.textContent = 'Vote counting starts in 1 day';
+    list.appendChild(countdown);
+    return; // skip rendering constituencies
+  }
+
   data.constituencies.forEach(cons => {
     const item = document.createElement('div');
     const isClose = Math.abs(cons.margin) < 1000;
