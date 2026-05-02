@@ -84,25 +84,38 @@ class ElectionService {
     const response = await axios.get(url);
     const $ = cheerio.load(response.data);
 
-    // Parse HTML and map to API format
-    // This is a placeholder - actual parsing depends on website structure
-    const data = {
+    // Parse HTML and map to API format based on ECI table structure
+    // Expected: a <table> where each row contains constituency data
+    const rows = $('table tbody tr');
+    const constituencies = [];
+    const leadingCounts = { LDF: 0, UDF: 0, BJP: 0, Others: 0 };
+    rows.each((_, tr) => {
+      const cols = $(tr).find('td');
+      if (cols.length < 4) return; // skip malformed rows
+      const name = $(cols[0]).text().trim();
+      const leadingParty = $(cols[1]).text().trim();
+      const marginText = $(cols[2]).text().trim().replace(/,/g, '');
+      const margin = parseInt(marginText, 10) || 0;
+      const status = $(cols[3]).text().trim();
+
+      constituencies.push({ name, leadingParty, margin, status });
+      // Increment seat count for the leading party (case‑insensitive match)
+      const partyKey = Object.keys(leadingCounts).find(k => k.toLowerCase() === leadingParty.toLowerCase());
+      if (partyKey) leadingCounts[partyKey]++;
+    });
+
+    // If the table is missing or empty, fall back to placeholder data
+    const data = constituencies.length ? {
       state: 'Kerala',
       totalSeats: 140,
-      leading: {
-        LDF: Math.floor(Math.random() * 70),
-        UDF: Math.floor(Math.random() * 70),
-        BJP: Math.floor(Math.random() * 70),
-        Others: 0
-      },
-      constituencies: [
-        {
-          name: 'Thrissur',
-          leadingParty: ['LDF', 'UDF', 'BJP'][Math.floor(Math.random() * 3)],
-          margin: Math.floor(Math.random() * 5000),
-          status: 'Leading'
-        }
-      ],
+      leading: leadingCounts,
+      constituencies,
+      lastUpdated: new Date().toISOString()
+    } : {
+      state: 'Kerala',
+      totalSeats: 140,
+      leading: { LDF: 0, UDF: 0, BJP: 0, Others: 0 },
+      constituencies: [],
       lastUpdated: new Date().toISOString()
     };
 

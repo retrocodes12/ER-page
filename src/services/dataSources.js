@@ -3,9 +3,11 @@
 const DataSource = {
   /**
    * Primary source: Real-time scraping from EC website
+   * Pattern based on ECI's historical URL structure for assembly results
    */
   EC_WEBSITE: {
-    url: 'https://results.eci.gov.in/',
+    // Will be live after May 4, 8:00 AM IST
+    url: 'https://results.eci.gov.in/Result2026/Assembly/partycomp11.htm',
     type: 'scrape',
     priority: 1,
     isActive: true,
@@ -16,7 +18,7 @@ const DataSource = {
    * Secondary source: State Election Commission
    */
   STATE_EC: {
-    url: 'https://keralaelection.gov.in/',
+    url: 'https://keralaelection.gov.in/results',
     type: 'scrape',
     priority: 2,
     isActive: true,
