@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Kerala Election Results</title>
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+    <div class="container">
+        <!-- Hero – big seat tally and last updated -->
+        <section class="hero">
+            <h1>Kerala Election Results</h1>
+            <div class="seat-tally">
+                <span class="number" id="total-seats">0</span>
+                <span class="label">Seats</span>
+            </div>
+            <div class="last-updated" id="last-updated">Last updated: --</div>
+        </section>
+
+        <!-- Leading party highlight -->
+        <section class="leading-party-highlight" id="leading-party-section">
+            <h2>Current Leader</h2>
+            <div class="leading-party-name" id="leading-party-name">--</div>
+            <div class="leading-party-seats" id="leading-party-seats">0 seats</div>
+        </section>
+
+        <!-- Party cards with color coding -->
+        <section class="party-grid" id="party-grid">
+            <!-- Filled by JS -->
+        </section>
+
+        <!-- Constituencies list -->
+        <section class="constituencies">
+            <h2>Constituencies</h2>
+            <div id="constituencies-list"></div>
+        </section>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
